@@ -37,10 +37,6 @@ h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background
 #gr{position:fixed;top:0;bottom:0;right:max(0px,calc(var(--pw,32vw) - 10px));width:20px;cursor:col-resize;z-index:6;display:flex;align-items:center;justify-content:center;touch-action:none}
 #gr i{width:6px;height:72px;border-radius:4px;background:#5eead4aa;box-shadow:0 0 14px #5eead466;transition:.2s}#gr:hover i{background:#5eead4;height:110px}
 @media (max-width:899px){#gr{display:none}}
-#start{position:fixed;inset:0;z-index:20;background:#07060df2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
-#start .row{display:flex;gap:14px;margin-top:8px}
-#start button{border:0;border-radius:12px;padding:14px 34px;font:700 18px Mukta,system-ui;cursor:pointer;background:var(--ok);color:#07060d}
-#start button.alt{background:#ffffff1f;color:var(--tx)}
 </style></head><body>
 <canvas id="cv"></canvas><canvas id="gc"></canvas>
 <div id="topwrap"><div id="dots"></div><div id="ap"><button id="apM" class="on">Manual</button><button id="apA">Auto</button></div></div>
@@ -48,8 +44,6 @@ h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background
 <div id="leg"><span id="l-f" style="--c:#5eead4">Frontal</span><span id="l-c" style="--c:#fbbf24">Central</span><span id="l-p" style="--c:#fb7185">Parieto-occipital</span></div>
 <div id="gr" title="Drag to resize · click to open/close"><i></i></div>
 <div id="ui"><div id="in"></div></div>
-<div id="start"><h1>Brain × Reinforcement Learning</h1><p>Mode nivda</p>
-<div class="row"><button id="sM" class="alt">Manual</button><button id="sA">Auto</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 const $=id=>document.getElementById(id),cl=(v,a,b)=>Math.min(b,Math.max(a,v)),ease=t=>{t=cl(t,0,1);return 1-Math.pow(1-t,3)};
@@ -160,12 +154,14 @@ vo.addEventListener('playing',clearAP);
 vo.addEventListener('ended',()=>{if(auto)go(st+1)});
 vo.addEventListener('error',()=>{if(auto)scheduleFallback()});
 function playVO(n){vo.pause();vo.src=`audio/${n+1}.mp3`;vo.currentTime=0;vo.play().catch(()=>{if(auto)scheduleFallback()})}
-$('apM').onclick=e=>{e.stopPropagation();setAuto(false)};$('apA').onclick=e=>{e.stopPropagation();setAuto(true)};
+$('apM').onclick=e=>{e.stopPropagation();setAuto(false)};
+$('apA').onclick=e=>{e.stopPropagation();setAuto(true)};
 function go(n){if(n>=S.length)n=0;if(n<0)n=0;st=n;tp=0;pk=-1;ps=performance.now()/1000;const s=S[n];
- $('in').style.animation='none';void$('in').offsetWidth;$('in').style.animation='';$('in').innerHTML=`<div class="s">Step ${n+1} of ${S.length}</div><h1>${s.t}</h1>${s.l.map(x=>`<p>${x}</p>`).join('')}${s.k?`<div class="k"><strong>${s.k[0]}</strong><span>${s.k[1]}</span></div>`:''}<div id="nv"><button id="bk">‹ Back</button><button id="nx">Next ›</button><span>Space or click</span></div>`;
+ $('in').style.animation='none';void $('in').offsetWidth;$('in').style.animation='';
+ $('in').innerHTML=`<div class="s">Step ${n+1} of ${S.length}</div><h1>${s.t}</h1>${s.l.map(x=>`<p>${x}</p>`).join('')}${s.k?`<div class="k"><strong>${s.k[0]}</strong><span>${s.k[1]}</span></div>`:''}<div id="nv"><button id="bk">‹ Back</button><button id="nx">Next ›</button><span>Space or click</span></div>`;
  [...dots.children].forEach((d,i)=>d.className=i<=n?'on':'');if(!s.pipe)setR(s.r);playVO(n);if(auto)scheduleFallback()}
 addEventListener('click',e=>{if(e.target.closest('#gr')||e.target.closest('#ap'))return;if(e.target.id==='bk')go(st-1);else go(st+1)});
-addEventListener('keydown',e=>{if($('start')||e.target.closest('#gr'))return;if(e.code==='Space'||e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();go(st+1)}else if(e.key==='ArrowLeft'||e.key==='Backspace')go(st-1)});
+addEventListener('keydown',e=>{if(e.target.closest('#gr'))return;if(e.code==='Space'||e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();go(st+1)}else if(e.key==='ArrowLeft'||e.key==='Backspace')go(st-1)});
 let T=0,last=performance.now();const cc=new THREE.Color();
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;
  for(const k in I)I[k]+=(IT[k]-I[k])*.06;
@@ -183,7 +179,5 @@ function setPW(v){PW=v;$('ui').style.display=v?'':'none';rs()}
 gr.onpointerdown=e=>{dg=1;mv=0;x0=e.clientX;gr.setPointerCapture(e.pointerId)};
 gr.onpointermove=e=>{if(!dg)return;if(Math.abs(e.clientX-x0)>4)mv=1;if(mv){let v=Math.min(innerWidth-e.clientX,innerWidth*.7);v=v<140?0:Math.max(v,260);setPW(v);if(v)LW=v}};
 gr.onpointerup=()=>{dg=0;if(!mv){if(pw()>0){LW=pw();setPW(0)}else setPW(LW||Math.max(380,innerWidth*.32))}};
-function begin(a){$('start').remove();setAuto(a);go(0)}$('start').onclick=e=>e.stopPropagation();
-$('sM').onclick=e=>{e.stopPropagation();begin(false)};$('sA').onclick=e=>{e.stopPropagation();begin(true)};
 go(0);requestAnimationFrame(frame);
 </script></body></html>

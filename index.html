@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>NeuroPredict 3D Story</title>
+<html lang="en"><head><meta charset="utf-8"><title>Brain × Reinforcement Learning</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#07060d;--tx:#f1eefb;--mu:#b3accb;--ok:#5eead4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+:root{--bg:#07060d;--tx:#f1eefb;--mu:#b3accb;--ok:#5eead4;box-sizing:border-box}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#07060d}}
+:root[data-theme="dark"],:root[data-theme="light"]{--bg:#07060d}
 html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-family:"Mukta",system-ui,sans-serif;overflow:hidden}
 #cv,#gc{position:fixed;left:0;top:0;display:block}#gc{pointer-events:none}
 #topwrap{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:16px;display:flex;align-items:center;gap:12px;z-index:5}
@@ -13,17 +14,29 @@ html,body{height:100%;margin:0;background:var(--bg);color:var(--tx);font-family:
 #ap{display:flex;background:#0d0b18cc;border:1px solid #ffffff26;border-radius:99px;padding:3px}
 #ap button{border:0;background:transparent;color:#8f89a5;font:700 12px Mukta,system-ui;padding:5px 12px;border-radius:99px;cursor:pointer}
 #ap button.on{background:var(--ok);color:#07060d}
-#ui{position:fixed;top:0;right:0;bottom:0;width:max(360px,30vw);box-sizing:border-box;padding:40px 32px;display:flex;flex-direction:column;justify-content:center;background:#0d0b18;border-left:1px solid #ffffff1a;overflow:auto}
+#leg{position:fixed;left:16px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap;font-size:14px;font-weight:700}
+#leg span{padding:3px 12px;border-radius:99px;border:1.5px solid var(--c);color:var(--c);opacity:.28;transition:.5s;background:#07060dcc}#leg span.on{opacity:1}
+#ui{position:fixed;top:0;right:0;bottom:0;width:var(--pw,32vw);box-sizing:border-box;padding:40px 34px;display:flex;flex-direction:column;justify-content:center;background:#0d0b18;border-left:1px solid #ffffff1a;overflow:auto}
 #in{animation:up .5s}@keyframes up{from{opacity:0;transform:translateY(10px)}}
-.s{font-size:13px;color:var(--ok);font-weight:700;margin-bottom:6px}
-h1{font-size:clamp(24px,2.6vw,34px);font-weight:800;margin:0 0 12px;line-height:1.15}
-p{font-size:clamp(15px,1.25vw,18px);line-height:1.55;color:var(--mu);margin:8px 0}b{color:var(--tx)}
-.k{display:flex;align-items:baseline;gap:10px;margin-top:16px}.k strong{font-size:44px;font-weight:800;color:var(--ok);line-height:1}.k span{font-size:14px;color:var(--mu)}
-#chip{display:inline-block;margin-left:8px;font-size:12px;font-weight:700;padding:2px 9px;border-radius:99px;background:#ffffff1c;vertical-align:middle}
-#nv{display:flex;gap:10px;margin-top:22px;align-items:center}#nv button{border:0;border-radius:10px;padding:10px 20px;font:700 15px Mukta,system-ui;background:var(--ok);color:#07060d;cursor:pointer}#nv button#bk{background:#ffffff1f;color:var(--tx)}
+.s{font-size:14px;color:var(--ok);font-weight:700;margin-bottom:6px}
+h1{font-size:clamp(26px,2.9vw,40px);font-weight:800;margin:0 0 14px;line-height:1.12}
+p{font-size:clamp(16px,1.35vw,20px);line-height:1.55;color:var(--mu);margin:9px 0}b{color:var(--tx)}
+.k{display:flex;align-items:baseline;gap:12px;margin-top:18px}.k strong{font-size:48px;font-weight:800;color:var(--ok);line-height:1}.k span{font-size:15px;color:var(--mu)}
+#nv{display:flex;gap:10px;margin-top:24px;align-items:center}#nv button{border:0;border-radius:10px;padding:11px 22px;font:700 15px Mukta,system-ui;background:var(--ok);color:#07060d;cursor:pointer}#nv button#bk{background:#ffffff1f;color:var(--tx)}
 #nv span{font-size:12px;color:#8f89a5}
-@media (max-width:899px){#ui{top:auto;left:0;width:auto;height:40%;padding:14px 16px;justify-content:flex-start;border-left:0;border-top:1px solid #ffffff1a}h1{font-size:21px;margin-bottom:6px}.k strong{font-size:30px}.k{margin-top:8px}#nv{margin-top:12px}}
+@media (max-width:899px){#ui{top:auto;left:0;width:auto;height:42%;padding:14px 16px;justify-content:flex-start;border-left:0;border-top:1px solid #ffffff1a}h1{font-size:21px;margin-bottom:6px}p{font-size:14px;margin:5px 0}.k strong{font-size:30px}.k{margin-top:8px}#nv{margin-top:12px}#leg{display:none}}
 @media (prefers-reduced-motion:reduce){#in{animation:none}}
+h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+#ui{justify-content:flex-start}#in{margin:auto 0}#nv{position:sticky;bottom:0;background:#0d0b18;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));z-index:2}
+@media (min-width:900px){#ui{padding:56px 30px 0}h1{font-size:clamp(24px,min(2.5vw,4.6vh),36px);margin-bottom:10px}p{font-size:clamp(15px,min(1.2vw,2.3vh),19px);line-height:1.5;margin:7px 0}.k{margin-top:12px}.k strong{font-size:clamp(34px,6vh,48px)}#nv{margin-top:14px}}
+#dots i{width:24px;height:4px}
+#ctl{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:calc(max(380px,32vw) + 14px);z-index:5;font:700 13px Mukta,system-ui;color:#f1eefb}
+#ctl button{border:1px solid #ffffff33;background:#0d0b18dd;color:#f1eefb;border-radius:99px;padding:6px 14px;font:inherit;cursor:pointer}
+#gp{position:absolute;right:0;top:38px;padding:12px 14px;background:#0d0b18f2;border:1px solid #ffffff22;border-radius:14px;display:grid;gap:9px;width:210px}#gp[hidden]{display:none}#gp label{display:grid;gap:2px;font-size:12px;color:#b3accb}#gp input{width:100%;accent-color:#5eead4}
+@media (max-width:899px){#ctl{right:12px}}
+#gr{position:fixed;top:0;bottom:0;right:max(0px,calc(var(--pw,32vw) - 10px));width:20px;cursor:col-resize;z-index:6;display:flex;align-items:center;justify-content:center;touch-action:none}
+#gr i{width:6px;height:72px;border-radius:4px;background:#5eead4aa;box-shadow:0 0 14px #5eead466;transition:.2s}#gr:hover i{background:#5eead4;height:110px}
+@media (max-width:899px){#gr{display:none}}
 #start{position:fixed;inset:0;z-index:20;background:#07060df2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;padding:24px}
 #start .row{display:flex;gap:14px;margin-top:8px}
 #start button{border:0;border-radius:12px;padding:14px 34px;font:700 18px Mukta,system-ui;cursor:pointer;background:var(--ok);color:#07060d}
@@ -31,101 +44,113 @@ p{font-size:clamp(15px,1.25vw,18px);line-height:1.55;color:var(--mu);margin:8px 
 </style></head><body>
 <canvas id="cv"></canvas><canvas id="gc"></canvas>
 <div id="topwrap"><div id="dots"></div><div id="ap"><button id="apM" class="on">Manual</button><button id="apA">Auto</button></div></div>
-<div id="ui"><div id="in"></div></div>
 <audio id="vo" preload="none"></audio>
-<div id="start"><h1>NeuroPredict 3D Story</h1><p>Mode nivda</p>
+<div id="leg"><span id="l-f" style="--c:#5eead4">Frontal</span><span id="l-c" style="--c:#fbbf24">Central</span><span id="l-p" style="--c:#fb7185">Parieto-occipital</span></div>
+<div id="gr" title="Drag to resize · click to open/close"><i></i></div>
+<div id="ui"><div id="in"></div></div>
+<div id="start"><h1>Brain × Reinforcement Learning</h1><p>Mode nivda</p>
 <div class="row"><button id="sM" class="alt">Manual</button><button id="sA">Auto</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-const $=id=>document.getElementById(id),V='#a78bfa',RO='#fb7185',M='#5eead4',WH='#f1eefb';
+const $=id=>document.getElementById(id),cl=(v,a,b)=>Math.min(b,Math.max(a,v)),ease=t=>{t=cl(t,0,1);return 1-Math.pow(1-t,3)};
+const V='#a78bfa',RO='#fb7185',M='#5eead4',AM='#fbbf24',WH='#f1eefb';
 const cv=$('cv'),gc=$('gc'),gx=gc.getContext('2d');
 const R=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});R.setPixelRatio(Math.min(devicePixelRatio,2));
-const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(50,1,.1,100);
-let W,H,sw,sh,dsk;
-function rs(){W=innerWidth;H=innerHeight;dsk=W>=900;sw=dsk?W-Math.max(360,W*.3):W;sh=dsk?H:Math.round(H*.6);const d=Math.min(devicePixelRatio,2);
-R.setSize(sw,sh,false);cv.style.width=gc.style.width=sw+'px';cv.style.height=gc.style.height=sh+'px';gc.width=sw*d;gc.height=sh*d;gx.setTransform(d,0,0,d,0,0);cam.aspect=sw/sh}
+const sc=new THREE.Scene(),cam=new THREE.PerspectiveCamera(48,1,.1,100);
+let PW=null,LW=null;const pw=()=>PW==null?Math.max(380,innerWidth*.32):PW;let W,H,sw,sh,dsk,BX=0,BY=0,BW=0,BH=0,ZS=1,FZ=1;
+function rs(){W=innerWidth;H=innerHeight;dsk=W>=900;sw=dsk?W-pw():W;document.documentElement.style.setProperty('--pw',(dsk?pw():0)+'px');sh=dsk?H:Math.round(H*.58);const d=Math.min(devicePixelRatio,2);
+R.setSize(sw,sh,false);cv.style.width=gc.style.width=sw+'px';cv.style.height=gc.style.height=sh+'px';gc.width=sw*d;gc.height=sh*d;gx.setTransform(d,0,0,d,0,0);cam.aspect=sw/sh;cam.updateProjectionMatrix()}
 addEventListener('resize',rs);rs();
-const A={};
-function reg(k,o){(A[k]=A[k]||{o:0,t:0,l:[]}).l.push(o);o.traverse(n=>{if(n.material){n.material.transparent=true;n.material.userData.b=n.material.opacity}})}
-function pts(a,c,s){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(a,3));return new THREE.Points(g,new THREE.PointsMaterial({color:c,size:s,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}))}
-function lab(t,c){const k=document.createElement('canvas');k.width=256;k.height=64;const g=k.getContext('2d');g.font='700 30px system-ui';g.fillStyle=c;g.textAlign='center';g.fillText(t,128,42);const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(k)}));s.scale.set(1.8,.45,1);return s}
-const brain=new THREE.Group(),bp=[];
-for(let i=0;i<3800;i++){const u=Math.random()*2-1,a=Math.random()*6.283,r=Math.sqrt(1-u*u),x=r*Math.cos(a),y=u,z=r*Math.sin(a);
-const f=1+.09*Math.sin(x*7)*Math.sin(y*7+1)*Math.sin(z*7)-.16*Math.exp(-x*x*250);bp.push(x*1.25*f,y*.85*f,z*1.05*f)}
-brain.add(pts(bp,0xa78bfa,.04));
-const els=[];for(let i=0;i<19;i++){const u=.1+.85*(i+.5)/19,a=i*2.4,r=Math.sqrt(1-u*u);
-const m=new THREE.Mesh(new THREE.SphereGeometry(.07,10,10),new THREE.MeshBasicMaterial({color:0x5eead4}));m.position.set(r*Math.cos(a)*1.29,u*.88,r*Math.sin(a)*1.08);brain.add(m);els.push(m)}
-brain.position.y=1.9;sc.add(brain);reg('b',brain);
-const heart=new THREE.Group(),hp=[];
-for(let i=0;i<3200;i++){const t=Math.random()*6.283,v=Math.random()*3.1416,s=Math.sin(v);
-hp.push(16*Math.pow(Math.sin(t),3)*s,(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t)+2.5)*s,7*Math.cos(v))}
-const hpts=pts(hp,0xfb7185,.045);hpts.scale.setScalar(.06);heart.add(hpts);heart.position.y=-.75;sc.add(heart);reg('h',heart);
-function trace(c,y){const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(420),3));const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:c}));l.position.y=y;sc.add(l);return l}
-const eg=trace(0xa78bfa,.65),cg=trace(0xfb7185,-2.2);reg('e',eg);reg('c',cg);
-const cvs=[1,-1].map(s=>new THREE.CatmullRomCurve3([new THREE.Vector3(s*1.2,1.5,0),new THREE.Vector3(s*2,.6,0),new THREE.Vector3(s*1.9,-.3,0),new THREE.Vector3(s*.9,-.8,0)]));
-const lk=pts(new Array(480).fill(0),0x5eead4,.09);sc.add(lk);reg('l',lk);
-function cloud(n,cy,rad,c,t){const a=[];for(let i=0;i<n;i++){const r=rad*Math.sqrt((i+.5)/n),q=i*2.39996;a.push(r*Math.cos(q),cy+r*Math.sin(q),0)}const p=pts(a,c,.16);sc.add(p);reg('x',p);const l=lab(t,'#f1eefb');l.position.set(0,cy+rad+.35,0);sc.add(l);reg('x',l);return p}
-const c36=cloud(36,1.5,.95,0xa78bfa,'EEGMAT · 36 people'),c65=cloud(65,-.9,1.35,0x5eead4,'ds003838 · 65 people');
-// chart configs
-const AC='Balanced accuracy (%)',ex=['EEG only','ECG only','EEG + ECG'];
-const CH={
-pipe:{wide:1,title:'The NeuroPredict pipeline',bw:.17,nodes:[[.1,.28,'EEG · 19 ch',V],[.3,.28,'4 s windows',V],[.5,.28,'Small CNN',V],[.7,.28,'P(task)',V],[.1,.72,'ECG',RO],[.3,.72,'HR · SDNN · RMSSD',RO],[.5,.72,'Logistic reg.',RO],[.7,.72,'P(task)',RO],[.9,.5,'Average → Rest / Task',M]],edges:[[0,1],[1,2],[2,3],[4,5],[5,6],[6,7],[3,8],[7,8]],notes:['Two separate models, one combined decision']},
-val:{title:'External validation flow',bw:.7,nodes:[[.5,.2,'Train: EEGMAT · 36 people',V],[.5,.5,'Frozen EEG CNN + ECG model',WH],[.5,.8,'Test: ds003838 · 65 new people',M]],edges:[[0,1],[1,2]],notes:['Different people · lab · task · EEG reference']},
-bands:{type:'bar',title:'EEG band power: task vs rest (n = 36)',cats:['Delta','Theta','Alpha','Beta','Gamma'],xl:'EEG frequency band',yl:'Change in power (%)',y:[-40,30,10],neg:RO,series:[{c:M,v:[11.9,-14.2,-33.9,-12.8,19.4]}],fmt:v=>(v>0?'+':'')+v+'%'},
-s1:{type:'line',sh:1,title:'Internal test: accuracy per seed',cats:['Seed 1','Seed 2','Seed 3','Seed 4','Seed 5'],xl:'Random seed (leave-one-subject-out)',yl:AC,y:[60,80,5],leg:1,series:[{n:'EEG only',c:V,v:[69.4,73.6,68.1,69.4,72.2]},{n:'ECG only',c:RO,v:[68.1,68.1,68.1,68.1,68.1]},{n:'EEG + ECG',c:M,v:[75,77.8,73.6,76.4,77.8]}]},
-hr:{type:'bar',title:'Heart rate: rest vs task (n = 36)',cats:['Rest','Task'],xl:'Condition',yl:'Heart rate (bpm)',y:[0,100,20],series:[{c:RO,cc:[V,RO],v:[73.85,86.57]}],fmt:v=>v.toFixed(1)},
-ext:{type:'bar',title:'External test: 65 new people',cats:ex,xl:'Model (error bars = 95% CI)',yl:AC,y:[40,75,5],ref:{v:50,l:'Chance'},series:[{c:V,cc:[V,RO,M],v:[56.9,60,64.6],e:[[53.1,61.5],[55.4,65.4],[59.2,70]]}],fmt:v=>v+'%'},
-rest:{type:'bar',title:'Where the gain comes from',cats:ex,xl:'Model',yl:'People classified correctly (%)',y:[0,100,20],leg:1,series:[{n:'Rest',c:RO,v:[14,66,29]},{n:'Task',c:V,v:[100,54,100]}],fmt:v=>v+'%'},
-jr:{type:'bar',title:'How accuracy improved, stage by stage',cats:['EEG\ninternal','+ECG\ninternal','EEG\nexternal','+ECG\nexternal','Stacked\nexternal'],two:1,xl:'Study stage',yl:AC,y:[40,80,10],ref:{v:50,l:'Chance'},series:[{c:V,cc:[V,M,V,M,WH],v:[70.6,76.1,56.9,64.6,70]}],fmt:v=>v+'%'}};
-const ease=t=>1-Math.pow(1-Math.min(1,Math.max(0,t)),3);
-function draw(C,x,y,w,h,p,T){const c=gx,fs=Math.max(11,Math.min(14,w/46));c.save();c.globalAlpha=Math.min(1,p*4);
-c.fillStyle='#0d0b18dd';c.beginPath();c.roundRect(x,y,w,h,14);c.fill();c.strokeStyle='#ffffff26';c.stroke();
-c.fillStyle=WH;c.font=`700 ${fs+3}px Mukta,system-ui`;c.textAlign='left';c.fillText(C.title,x+16,y+27);
-C.nodes?pipe(C,x,y,w,h,fs,T):plot(C,x,y,w,h,p,fs);c.restore()}
-function pipe(C,x,y,w,h,fs,T){const c=gx,bw=w*C.bw,bh=Math.max(34,h*.12),P=C.nodes.map(n=>[x+w*n[0],y+h*n[1]]);
-c.font=`700 ${fs}px Mukta,system-ui`;c.textAlign='center';c.textBaseline='middle';c.lineWidth=2;
-C.edges.forEach(([a,b],k)=>{const A=P[a],B=P[b],hz=Math.abs(B[0]-A[0])>bw*.6,g=Math.sign(hz?B[0]-A[0]:B[1]-A[1]);
-const s=hz?[A[0]+g*bw/2,A[1]]:[A[0],A[1]+g*bh/2],e=hz?[B[0]-g*bw/2,B[1]]:[B[0],B[1]-g*bh/2];
-c.strokeStyle='#ffffff44';c.beginPath();c.moveTo(...s);c.lineTo(...e);c.stroke();
-c.fillStyle='#ffffff66';c.beginPath();const d=hz?[g*8,0]:[0,g*8],q=hz?[0,5]:[5,0];c.moveTo(...e);c.lineTo(e[0]-d[0]+q[0],e[1]-d[1]+q[1]);c.lineTo(e[0]-d[0]-q[0],e[1]-d[1]-q[1]);c.fill();
-c.fillStyle=C.nodes[a][3];for(let j=0;j<3;j++){const t=(T*.4+k*.13+j/3)%1;c.beginPath();c.arc(s[0]+(e[0]-s[0])*t,s[1]+(e[1]-s[1])*t,4,0,7);c.fill()}});
-C.nodes.forEach((n,i)=>{const[px,py]=P[i];c.fillStyle='#1a1630';c.strokeStyle=n[3];c.beginPath();c.roundRect(px-bw/2,py-bh/2,bw,bh,10);c.fill();c.stroke();c.fillStyle=WH;c.fillText(n[2],px,py)});
-c.fillStyle='#b3accb';c.font=`${fs}px Mukta,system-ui`;C.notes.forEach((t,i)=>c.fillText(t,x+w/2,y+h-18-i*18));c.textBaseline='alphabetic'}
-function plot(C,x,y,w,h,p,fs){const c=gx,px=x+66,py=y+56,pw=w-88,ph=h-56-(C.two?84:68),[y0,y1,st]=C.y,Y=v=>py+ph*(1-(v-y0)/(y1-y0)),n=C.cats.length,base=Math.max(y0,Math.min(0,y1));
-c.font=`${fs}px Mukta,system-ui`;c.lineWidth=1;c.fillStyle='#b3accb';c.textAlign='right';
-for(let v=y0;v<=y1+1e-6;v+=st){c.strokeStyle='#ffffff18';c.beginPath();c.moveTo(px,Y(v));c.lineTo(px+pw,Y(v));c.stroke();c.fillText(v,px-8,Y(v)+4)}
-c.strokeStyle='#f1eefbaa';c.beginPath();c.moveTo(px,py);c.lineTo(px,py+ph);c.lineTo(px+pw,py+ph);c.stroke();
-if(y0<0){c.beginPath();c.moveTo(px,Y(0));c.lineTo(px+pw,Y(0));c.stroke()}
-c.textAlign='center';C.cats.forEach((t,i)=>t.split('\n').forEach((s,k)=>c.fillText(s,px+pw*(i+.5)/n,py+ph+18+k*(fs+3))));
-c.fillStyle=WH;c.font=`700 ${fs}px Mukta,system-ui`;c.fillText(C.xl,px+pw/2,y+h-12);
-c.save();c.translate(x+18,py+ph/2);c.rotate(-Math.PI/2);c.fillText(C.yl,0,0);c.restore();
-if(C.ref&&C.ref.v>=y0){c.setLineDash([6,5]);c.strokeStyle='#f1eefb99';c.beginPath();c.moveTo(px,Y(C.ref.v));c.lineTo(px+pw,Y(C.ref.v));c.stroke();c.setLineDash([]);c.textAlign='right';c.fillStyle='#f1eefbcc';c.fillText(C.ref.l+' '+C.ref.v+'%',px+pw-4,Y(C.ref.v)-5)}
-c.font=`${fs}px Mukta,system-ui`;
-if(C.leg){let xr=x+w-16;c.textAlign='right';C.series.slice(0,C.sh||9).reverse().forEach(s=>{c.fillStyle=WH;c.fillText(s.n,xr,y+27);xr-=c.measureText(s.n).width+16;c.fillStyle=s.c;c.fillRect(xr,y+18,10,10);xr-=20})}
-if(C.type=='bar'){const m=C.series.length,gw=pw/n,bw=gw*.66/m;
-C.series.forEach((s,si)=>s.v.forEach((v,i)=>{const e=ease(p*1.6-(i*m+si)*.08),vv=base+(v-base)*e,bx=px+gw*i+gw*.17+bw*si;
-c.fillStyle=C.neg&&v<0?C.neg:(s.cc?s.cc[i]:s.c);c.fillRect(bx,Math.min(Y(vv),Y(base)),bw,Math.abs(Y(vv)-Y(base)));
-if(e>.95){c.fillStyle=WH;c.textAlign='center';let ty=v<0?Y(v)+fs+4:Y(s.e?s.e[i][1]:v)-6;
-if(s.e){c.strokeStyle=WH;c.beginPath();c.moveTo(bx+bw/2,Y(s.e[i][0]));c.lineTo(bx+bw/2,Y(s.e[i][1]));c.moveTo(bx+bw/2-6,Y(s.e[i][0]));c.lineTo(bx+bw/2+6,Y(s.e[i][0]));c.moveTo(bx+bw/2-6,Y(s.e[i][1]));c.lineTo(bx+bw/2+6,Y(s.e[i][1]));c.stroke()}
-c.fillText(C.fmt(v),bx+bw/2,ty)}}))}
-else C.series.slice(0,C.sh).forEach(s=>{const k=p*(n-1)*1.3,X=i=>px+pw*(i+.5)/n;c.strokeStyle=c.fillStyle=s.c;c.lineWidth=3;c.beginPath();c.moveTo(X(0),Y(s.v[0]));
-for(let i=1;i<n;i++){const f=Math.min(1,Math.max(0,k-(i-1)));if(f<=0)break;c.lineTo(X(i-1)+(X(i)-X(i-1))*f,Y(s.v[i-1])+(Y(s.v[i])-Y(s.v[i-1]))*f)}c.stroke();
-for(let i=0;i<n;i++)if(i<=k){c.beginPath();c.arc(X(i),Y(s.v[i]),5,0,7);c.fill();if(k>n-1){c.textAlign='center';c.font=`${fs-1}px Mukta`;c.fillText(s.v[i],X(i),Y(s.v[i])-10)}}c.lineWidth=1})}
+/* brain: point cloud, three regions */
+const N=9000,pos=new Float32Array(N*3),col=new Float32Array(N*3),wt=[],rcs=[];
+const CF=new THREE.Color(M),CC=new THREE.Color(AM),CP=new THREE.Color(RO),BASE=new THREE.Color('#6d5fc9');
+for(let i=0;i<N;i++){const u=Math.random()*2-1,a=Math.random()*6.283,r=Math.sqrt(1-u*u),x=r*Math.cos(a),y=u,z=r*Math.sin(a);
+const f=1+.08*Math.sin(x*7)*Math.sin(y*7+1)*Math.sin(z*7)-.16*Math.exp(-z*z*220);
+pos.set([x*1.75*f,y*1.0*f-(y<-.3?.12*(-.3-y):0),z*1.05*f],i*3);
+const wf=cl((-.3-x)/.3,0,1),wp=cl((x-.3)/.3,0,1),wc=1-wf-wp;wt.push([wf,wc,wp]);
+rcs.push(new THREE.Color(0).add(CF.clone().multiplyScalar(wf)).add(CC.clone().multiplyScalar(wc)).add(CP.clone().multiplyScalar(wp)))}
+const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(pos,3));g.setAttribute('color',new THREE.BufferAttribute(col,3));
+const brain=new THREE.Points(g,new THREE.PointsMaterial({size:.055,vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));
+brain.position.y=.05;sc.add(brain);
+const sp=new Float32Array(2700);for(let i=0;i<2700;i++)sp[i]=i%3==2?-1.5-Math.random()*9:(Math.random()-.5)*26;
+const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.BufferAttribute(sp,3));const stars=new THREE.Points(sg,new THREE.PointsMaterial({size:.03,color:0x8a7fe0,transparent:true,opacity:.6}));sc.add(stars);
+const rings=[2.2,2.55].map((r,i)=>{const m=new THREE.Mesh(new THREE.TorusGeometry(r,.007,8,160),new THREE.MeshBasicMaterial({color:i?0xfbbf24:0x5eead4,transparent:true,opacity:.3}));m.rotation.x=1.35+i*.2;sc.add(m);return m});
+const I={f:1,c:1,p:1},IT={f:1,c:1,p:1};
+function setR(s){['f','c','p'].forEach(k=>{const on=s.includes(k);IT[k]=on?1:.1;$('l-'+k).classList.toggle('on',on)})}
+/* charts (fixed layout, drawn on overlay) */
+function rr(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
+function bars(C,x,y,w,h,p){if(C.ln)return lines(C,x,y,w,h,p);const c=gx,n=C.rows.length,fs=Math.min(cl(w/26,11,24)*FZ,h/(n*2.4+8.2));
+c.fillStyle='#0d0b18d6';rr(c,x,y,w,h,18);c.fill();c.strokeStyle='#ffffff1c';c.stroke();
+c.font=`800 ${fs+4}px Mukta,system-ui`;c.fillStyle=WH;c.textAlign='left';c.fillText(C.title,x+24,y+fs+22);
+if(C.sub){c.font=`${fs-2}px Mukta`;c.fillStyle='#b3accb';c.fillText(C.sub,x+24,y+fs*2.5+18)}
+const top=y+fs*(C.sub?4.4:3.6),bot=y+h-fs*3.6,rh=(bot-top)/n,lw=w*.32,vw=fs*5.6,x0=x+24+lw,tw=w-48-lw-vw,zx=C.div?x0+tw/2:x0,lo=C.div?-C.max:0;
+c.font=`${fs-4}px Mukta`;c.textAlign='center';c.lineWidth=1;
+for(let i=0;i<=4;i++){const X=x0+tw*i/4,v=lo+(C.max-lo)*i/4;c.strokeStyle=(i==0||i==4||(C.div&&i==2))?'#ffffff30':'#ffffff12';c.beginPath();c.moveTo(X,top-4);c.lineTo(X,bot);c.stroke();c.fillStyle='#8f89a5';c.fillText(+v.toFixed(3),X,bot+fs*1.2)}
+c.fillStyle='#b3accb';c.font=`700 ${fs-2}px Mukta`;c.textAlign='center';c.fillText('X: '+(C.unit||'Value'),x0+tw/2,bot+fs*2.5);c.save();c.translate(x+14,(top+bot)/2);c.rotate(-Math.PI/2);c.fillText('Y: '+(C.yl||'Condition'),0,0);c.restore();
+C.rows.forEach((r,i)=>{const cy=top+rh*(i+.5),th=Math.min(rh*.5,28),e=ease(p*1.5-i*.1);
+  if(i%2==0){c.fillStyle='#ffffff08';c.fillRect(x+10,cy-rh/2,w-20,rh)}
+  const len=Math.abs(r[1])/C.max*(C.div?tw/2:tw)*e;c.fillStyle=r[2];
+  if(len>.5){rr(c,r[1]<0?zx-len:zx,cy-th/2,Math.max(len,3),th,Math.min(th/2,len/2+1));c.fill()}
+  c.font=`700 ${fs-1}px Mukta,system-ui`;c.fillStyle=WH;c.textAlign='left';r[0].split('\n').forEach((t,k,a)=>{c.fillStyle=k?'#b3accb':WH;c.fillText(t,x+40,cy+fs*.35+(k-(a.length-1)/2)*fs*1.1)});
+  if(e>.9){c.fillStyle=r[2]==='#ffffff'?WH:r[2];c.textAlign='right';c.font=`800 ${fs+1}px Mukta,system-ui`;c.fillText(r[3],x+w-20,cy+fs*.35)}});
+if(C.th){const X=x0+C.th/C.max*tw;c.strokeStyle=WH;c.lineWidth=2;c.setLineDash([6,5]);c.beginPath();c.moveTo(X,top-4);c.lineTo(X,bot);c.stroke();c.setLineDash([]);c.fillStyle=WH;c.textAlign='center';c.font=`700 ${fs-3}px Mukta`;c.fillText(C.thl||'',X,top-10)}c.lineWidth=1}
+function lines(C,x,y,w,h,p){const c=gx,fs=Math.min(cl(w/26,11,24)*FZ,h/16),n=C.x.length,tk=C.tk||5,L=x+92,Rr=x+w-34,t0=y+fs*6.2,Bt=y+h-fs*3.6,X=i=>L+(Rr-L)*(.16+.68*i/(n-1)),Y=v=>Bt-(Bt-t0)*(v-C.min)/(C.max-C.min);
+c.fillStyle='#0d0b18d6';rr(c,x,y,w,h,18);c.fill();c.strokeStyle='#ffffff1c';c.stroke();
+c.font=`800 ${fs+4}px Mukta`;c.fillStyle=WH;c.textAlign='left';c.fillText(C.title,x+24,y+fs+22);c.font=`${fs-2}px Mukta`;c.fillStyle='#b3accb';c.fillText(C.sub,x+24,y+fs*2.5+18);
+let lx=x+24;C.s.forEach(s=>{c.strokeStyle=s.c;c.lineWidth=4;c.beginPath();c.moveTo(lx,y+fs*4.4);c.lineTo(lx+26,y+fs*4.4);c.stroke();c.fillStyle=WH;c.font=`700 ${fs-2}px Mukta`;c.fillText(s.n,lx+34,y+fs*4.4+5);lx+=c.measureText(s.n).width+70});
+c.lineWidth=1;c.font=`${fs-3}px Mukta`;
+for(let i=0;i<=tk;i++){const v=C.min+(C.max-C.min)*i/tk,yy=Y(v);c.strokeStyle=Math.abs(v)<1e-9?'#ffffff77':'#ffffff14';c.beginPath();c.moveTo(L,yy);c.lineTo(Rr,yy);c.stroke();c.fillStyle='#8f89a5';c.textAlign='right';c.fillText(+v.toFixed(3),L-8,yy+5)}
+c.textAlign='center';C.x.forEach((t,i)=>{c.strokeStyle='#ffffff10';c.beginPath();c.moveTo(X(i),t0);c.lineTo(X(i),Bt);c.stroke();c.fillStyle=WH;c.fillText(t,X(i),Bt+fs*1.3)});
+c.fillStyle='#b3accb';c.font=`700 ${fs-2}px Mukta`;c.fillText('X: '+C.xl,(L+Rr)/2,Bt+fs*2.6);c.save();c.translate(x+22,(t0+Bt)/2);c.rotate(-Math.PI/2);c.fillText('Y: '+C.yl,0,0);c.restore();
+c.strokeStyle=WH;c.lineWidth=2;c.beginPath();c.moveTo(L,t0);c.lineTo(L,Bt);c.lineTo(Rr,Bt);c.stroke();
+const e=ease(p*1.1),tt=e*(n-1),f=Math.floor(tt);
+C.s.forEach((s,k)=>{c.strokeStyle=s.c;c.lineWidth=4;c.lineJoin='round';c.shadowColor=s.c;c.shadowBlur=12;c.beginPath();
+  for(let i=0;i<=f&&i<n;i++)i?c.lineTo(X(i),Y(s.v[i])):c.moveTo(X(i),Y(s.v[i]));
+  if(f<n-1){const fr=tt-f;c.lineTo(X(f)+(X(f+1)-X(f))*fr,Y(s.v[f])+(Y(s.v[f+1])-Y(s.v[f]))*fr)}c.stroke();c.shadowBlur=0;
+  for(let i=0;i<=f&&i<n;i++){c.fillStyle=s.c;c.beginPath();c.arc(X(i),Y(s.v[i]),7,0,7);c.fill();c.strokeStyle='#0d0b18';c.lineWidth=2;c.stroke();
+  if(e>.9&&!C.nl){c.fillStyle=s.c;c.font=`800 ${fs-3}px Mukta`;const m=i==0,l=i==n-1&&n>1;c.textAlign=m?'right':l?'left':'center';c.fillText(s.v[i],X(i)+(m?-14:l?14:0),Y(s.v[i])+(m||l?5:k?fs*1.5:-fs*.8))}}});c.lineWidth=1}
+const AN={f:[-1.2,.8,0],c:[0,1.05,0],p:[1.2,.8,0]},NM={f:['Frontal','8 channels',M],c:['Central','8 channels',AM],p:['Parieto-occipital','9 channels',RO]};
+function floaters(s,T){if(s.pipe)return;const c=gx,fs=cl(sw/58,13,19),maxX=dsk&&s.ch?BX-14:sw-10;
+['f','c','p'].forEach((k,i)=>{const a=I[k];if(a<.4)return;const v=new THREE.Vector3(...AN[k]);brain.localToWorld(v);v.project(cam);
+  const X=(v.x*.5+.5)*sw,Y=(-v.y*.5+.5)*sh,n=NM[k],sub=(s.fl&&s.fl[k])||n[1],bob=Math.sin(T*1.3+i*2.1)*8;
+  c.globalAlpha=cl((a-.4)/.6);c.font=`800 ${fs+2}px Mukta`;const w1=c.measureText(n[0]).width;c.font=`${fs}px Mukta`;const w=Math.max(w1,c.measureText(sub).width)+30,h=fs*2.9;
+  const bx=cl(X-w/2,8,Math.max(8,maxX-w)),by=Math.max(50,Y-h-46+bob);
+  c.strokeStyle=n[2];c.lineWidth=2;c.beginPath();c.moveTo(X,Y);c.lineTo(cl(X,bx+14,bx+w-14),by+h);c.stroke();c.fillStyle=n[2];c.beginPath();c.arc(X,Y,5,0,7);c.fill();
+  c.fillStyle='#0d0b18ee';rr(c,bx,by,w,h,14);c.fill();c.shadowColor=n[2];c.shadowBlur=16;c.stroke();c.shadowBlur=0;c.textAlign='left';
+  c.fillStyle=n[2];c.font=`800 ${fs+2}px Mukta`;c.fillText(n[0],bx+15,by+fs*1.25);c.fillStyle=WH;c.font=`${fs}px Mukta`;c.fillText(sub,bx+15,by+fs*2.45);c.globalAlpha=1;c.lineWidth=1})}
+const PIPE=[['Behaviour','23 people, verified',V],['3 RL models','M1 · M2 · M3',V],['Model RPE','surprise per trial',V],['EEG epochs','-0.2 to 0.8 s',M],['Decoder','CNN or Transformer',AM],['Compare','seeds · FDR · jackknife',RO]],PR=['','','','fcp','fcp','p'];
+let ps=0,pk=-1;
+function pipe(x,y,w,h,T){const c=gx,fs=cl(w/46,14,20),bw=w*.29,bh=h*.36,gapx=(w-3*bw)/2,k=Math.floor((T-ps)/1.5)%8;
+c.font=`800 ${fs+8}px Mukta`;c.fillStyle=WH;c.textAlign='left';c.fillText('From choices to a brain signal',x,y-fs);
+if(k!==pk){pk=k;setR(PR[Math.min(k,5)]||'p')}
+PIPE.forEach((s,i)=>{const cx=x+(i%3)*(bw+gapx),cy=y+(i<3?0:bh+h*.14),on=i<=k,cur=i===k;
+  c.globalAlpha=on?1:.3;c.fillStyle='#0d0b18f0';rr(c,cx,cy,bw,bh,16);c.fill();c.strokeStyle=s[2];c.lineWidth=cur?4:2;if(cur){c.shadowColor=s[2];c.shadowBlur=24}rr(c,cx,cy,bw,bh,16);c.stroke();c.shadowBlur=0;c.lineWidth=1;
+  c.fillStyle=s[2];c.font=`800 ${fs*2.4}px Mukta`;c.textAlign='left';c.fillText(i+1,cx+16,cy+fs*2.5);
+  c.fillStyle=WH;c.font=`800 ${fs+2}px Mukta`;c.fillText(s[0],cx+16,cy+bh*.66);c.fillStyle='#b3accb';c.font=`${fs-2}px Mukta`;c.fillText(s[1],cx+16,cy+bh*.66+fs*1.3);
+  if(i%3<2){c.strokeStyle=s[2];c.lineWidth=3;c.beginPath();c.moveTo(cx+bw+6,cy+bh/2);c.lineTo(cx+bw+gapx-6,cy+bh/2);c.stroke();c.lineWidth=1}
+  c.globalAlpha=1});
+c.strokeStyle=RO;c.lineWidth=3;c.globalAlpha=k>=3?1:.3;c.beginPath();c.moveTo(x+2*(bw+gapx)+bw/2,y+bh+6);c.lineTo(x+2*(bw+gapx)+bw/2,y+bh+h*.14-6);c.stroke();c.globalAlpha=1;c.lineWidth=1}
+const B=(l,v,c,t)=>[l,v,c,t];
 const S=[
-{v:{b:1,h:1},cam:[0,10],t:'Can the heart help the brain predict mental effort?',l:['EEG (brain signals) + ECG (heart signals): can they tell if a person is <b>resting or doing mental arithmetic</b>?','Trained on one public dataset, then tested on a completely different one the model never saw.']},
-{v:{b:.15,h:.15},cam:[0,10],ch:CH.pipe,t:'The full pipeline',l:['EEG → 4 s windows → small CNN → P(task).','ECG → heart rate, SDNN, RMSSD → logistic regression → P(task).','A weighted average of both probabilities decides: <b>Rest or Task</b>.']},
-{v:{b:1,e:1},cam:[1.3,6.5],t:'The brain: EEG',l:['<b>19 scalp electrodes</b> (green dots, 10-20 system) record brain activity at 500 Hz.','Band-pass 1–40 Hz, average reference, 4-second windows with a 2 s step.'],k:['36','people in EEGMAT (training)']},
-{v:{b:1,e:1},cam:[1.3,6.5],m:1,ch:CH.bands,t:'Rest vs mental task',l:['During arithmetic, alpha falls 33.9% overall and <b>37.4% over the back of the head</b>; 33 of 36 people show it.','Watch the live wave: slower and larger at rest, smaller and faster during the task.'],k:['−37.4%','occipital/parietal alpha']},
-{v:{b:1,e:1},cam:[1.3,6.5],ch:{...CH.s1,sh:1},t:'Brain-only result (internal)',l:['Leave-one-subject-out: train on 35 people, test on the 1 left out, repeated over 5 seeds.','EEG-only balanced accuracy averages <b>70.6%</b> (chance = 50%).'],k:['70.6%','EEG-only']},
-{v:{b:1,h:1,l:1,e:1,c:1},cam:[0,10],m:1,t:'Now connect the heart',l:['Brain and heart are linked through the autonomic nervous system; the green particles show that link.','Alpha change and heart-rate change are uncorrelated (r = 0.071), so they may carry <b>different information</b>.']},
-{v:{b:.2,h:1,c:1,l:.4},cam:[-1.3,7],m:1,ch:CH.hr,t:'The heart: ECG',l:['Heart rate rises from 73.85 to <b>86.57 bpm</b> during the task (p = 0.00022).','SDNN and RMSSD are noisy, so this model is effectively a heart-rate model (logistic regression, 68.1%).'],k:['+12.7 bpm','mean rise during task']},
-{v:{b:.6,h:.6,l:.5,e:.4,c:.4},cam:[0,10],m:1,ch:{...CH.s1,sh:3},t:'Fusion: EEG + ECG',l:['The ensemble reaches <b>76.1%</b> vs 70.6% for EEG-only (+5.6 points) and wins in <b>5 of 5 seeds</b>.','The seeds share the same 36 people, so they are not independent tests.'],k:['76.1%','ensemble, internal']},
-{v:{x:1},cam:[.3,8],ch:CH.val,t:'External validation',l:['Frozen models are tested on ds003838: <b>65 new people</b>, a different lab, a different task (digit-span memory) and a different EEG reference (FCz).','The notebook automatically checks window, step, channels, sampling rate and reference first.'],k:['65','never-seen people']},
-{v:{b:.3,h:.3},cam:[0,10],ch:CH.ext,t:'External result',l:['Ensemble <b>64.6%</b> vs EEG-only 56.9%: +7.7 points, p = 0.0016, 95% CI +3.8 to +12.3.','ECG-only (60.0%) is about as good as EEG-only; the ensemble is not confirmed better than ECG-only.'],k:['+7.7','points over EEG-only']},
-{v:{b:.3,h:.3},cam:[0,10],ch:CH.rest,t:'Where the gain comes from',l:['EEG-only says "task" for almost everyone: rest is correct for only 9 of 65 people.','The ensemble pulls answers toward "rest" (<b>19 of 65</b>) without losing any task case: 10 wins, 55 ties, 0 losses.'],k:['9 → 19','of 65 rest cases correct']},
-{v:{b:.3,h:.3},cam:[0,10],ch:CH.jr,t:'Honest conclusion',l:['A real but modest gain at a fixed cut-off. EEG-only still has the higher AUC (0.806 vs 0.763; gap not confirmed).','The EEG model transferred poorly and the heart did much of the work. A stacked combiner reached 70.0%, but <b>64.6% is far too low for safety use</b>.'],k:['70.0%','stacked meta-classifier']}];
+{r:'fcp',t:'Can brain signals tell learning models apart?',l:['We decode <b>reward prediction error (RPE)</b> from EEG using three reinforcement-learning models, two decoders and two datasets.','The glowing regions are the parts of the scalp we listen to.'],k:['12,880','trials from 23 people']},
+{r:'',pipe:1,t:'The full pipeline',l:['Choices and rewards feed three learning models. Each produces a surprise signal (RPE) for every trial.','A neural network reads the EEG and tries to predict that signal, always on a person it has never seen.']},
+{r:'fcp',t:'The data',l:['Reward and punishment reversal learning, 560 trials per person, EEG at 1024 Hz from <b>-0.2 to 0.8 s</b> around every outcome.','A second dataset, a three-armed bandit, is used to test replication.'],k:['23','people per dataset'],fl:{f:'Learning signals',c:'Button press checked',p:'Where the effect appears'}},
+{r:'',t:'Getting behaviour right first',l:['Our first fits sat at chance level. Simulated people were recovered fine, so the <b>data</b> were wrong, not the code.','We switched to the authors\' ground-truth files and matched every person by their reward sequence against the EEG markers.'],k:['23 of 23','people matched exactly']},
+{r:'',ch:{unit:'Recovery correlation r (dashed = 0.7)',yl:'Parameter',title:'Parameter recovery (r)',sub:'Simulated people: does the fit find the true settings?',max:1,th:.7,thl:'good',rows:[B('M1\nlearning rate',.96,M,'0.96'),B('M1\ninverse temp.',.83,M,'0.83'),B('M2\nα gain',.72,M,'0.72'),B('M2\nα loss',.88,M,'0.88'),B('M2\ninverse temp.',.69,AM,'0.69'),B('M3\nα0',.56,RO,'0.56'),B('M3\nkappa',.52,RO,'0.52'),B('M3\neta',.43,RO,'0.43'),B('M3\ninverse temp.',.91,M,'0.91')]},t:'Which parameters can we trust?',l:['M1 is recovered well. M2 is mixed. M3 is weak for three of four parameters.','So we trust M3\'s <b>RPE output</b> more than its individual fitted values.'],k:['0.96','M1 learning-rate recovery']},
+{r:'',ch:{unit:'RPE correlation r',yl:'Model pair',title:'How similar are the models?',sub:'Correlation of trial-by-trial RPE',max:1,rows:[B('M1 vs M3',.97,V,'0.970'),B('M1 vs M2',.938,V,'0.938'),B('M2 vs M3',.906,V,'0.906')]},t:'Three models, almost the same story',l:['Nearly identical RPE signals are hard to separate with EEG.','This is <b>model mimicry</b>: different formulas, almost the same predictions.'],k:['0.970','M1 vs M3 RPE correlation']},
+{r:'',ch:{title:'Which model wins on behaviour?',sub:'Number of winners',max:30,unit:'Person-blocks won (count)',yl:'Test · model',rows:[B('In-sample\nM2 (46 blocks)',27,AM,'27'),B('In-sample\nM1',15,V,'15'),B('In-sample\nM3',4,V,'4'),B('Out-of-sample\nM2 (23 people)',13,AM,'13'),B('Out-of-sample\nM1',6,V,'6'),B('Out-of-sample\nM3',4,V,'4')]},t:'In-sample and out-of-sample disagree',l:['In-sample AIC favours M2, but out-of-sample <b>no pair differs</b> (p = 0.29 to 0.83).','M2 probably wins by having an extra parameter, not by being truly better.'],k:['p = 0.29','M1 vs M2, out-of-sample']},
+{r:'fcp',ch:{unit:'Correlation r (decoded vs true RPE)',yl:'Region · condition',title:'Decoded vs true RPE (correlation)',sub:'Raw, and after removing win/loss',max:.1,div:1,rows:[B('Frontal\nraw',.08,M,'0.080'),B('Frontal\nno win/loss',-.01,'#ffffff','-0.010'),B('Central\nraw',.066,AM,'0.066'),B('Central\nno win/loss',.019,'#ffffff','0.019'),B('Parieto-occ.\nraw',.047,RO,'0.047'),B('Parieto-occ.\nno win/loss',-.008,'#ffffff','-0.008')]},t:'The trap: win versus loss',l:['Raw decoding looks positive in every region, but it mostly reads <b>win or loss</b>.','After removing win/loss the signal vanishes, so graded RPE is not decodable.'],k:['0.86','RPE vs reward correlation'],fl:{f:'Strongest, but win/loss',c:'Not a button press',p:'Weakest raw signal'}},
+{r:'fcp',ch:{ln:1,title:'Raw decoding fades front to back',sub:'Same order on both datasets',x:['Frontal','Central','Parieto-occ.'],xl:'Scalp region',yl:'Decoded vs true RPE, r',min:0,max:.14,tk:7,s:[{n:'ds003458 · M1',c:M,v:[.118,.099,.085]},{n:'ds003458 · M3',c:V,v:[.108,.095,.079]},{n:'ds004295 · M1',c:AM,v:[.08,.066,.047]}]},t:'Same pattern in two datasets',l:['Raw decoding is strongest at the <b>front</b> and weakest at the back, in <b>both</b> datasets.','But remember: this is mostly win-versus-loss information, not graded RPE.'],k:['2 of 2','datasets share the order']},
+{r:'p',ch:{unit:'Interaction β (negative = flip)',yl:'Model',title:'Interaction beta, parieto-occipital',sub:'Negative = link flips between wins and losses',max:.6,div:1,rows:[B('M1\n4 of 4 seeds',-.4375,RO,'-0.44'),B('M2\n0 of 4 seeds',-.0156,V,'-0.02'),B('M3\n3 of 4 seeds',-.4373,RO,'-0.44')]},t:'Zoom in: a real signal',l:['In the parieto-occipital region the link between predicted and true RPE <b>flips between wins and losses</b> for M1 and M3, but not M2.','It survives 23 of 23 leave-one-out runs and a 90-test FDR correction.'],k:['p = 0.0025','M1, seed 0'],fl:{p:'Interaction flips here'}},
+{r:'p',ch:{ln:1,title:'The flip: wins vs losses',sub:'Correlation within each outcome type (M1, seed 0)',x:['Wins','Losses'],xl:'Outcome type',yl:'Decoded vs true RPE, r',min:-.06,max:.06,tk:6,s:[{n:'Central',c:AM,v:[.0013,.0389]},{n:'Parieto-occipital',c:RO,v:[-.0321,.0265]},{n:'Frontal',c:M,v:[-.0187,-.0038]}]},t:'See the flip',l:['In the <b>parieto-occipital</b> line the link goes from negative after wins to positive after losses.','That flip is exactly what the interaction test picks up.'],k:['-0.032 → +0.027','wins to losses'],fl:{p:'The flip lives here'}},
+{r:'p',ch:{ln:1,nl:1,title:'Interaction beta, seed by seed',sub:'Parieto-occipital, CNN (seed values read from report Fig. 5)',x:['Seed 0','Seed 1','Seed 2','Seed 3'],xl:'Training seed',yl:'Interaction β',min:-.6,max:0,tk:6,s:[{n:'M1',c:AM,v:[-.429,-.339,-.413,-.569]},{n:'M3',c:RO,v:[-.488,-.533,-.445,-.284]},{n:'M2',c:V,v:[-.025,-.026,.002,-.013]}]},t:'Stable across seeds',l:['M1 and M3 stay far below zero in every seed; M2 hugs zero.','A robust, region-specific pattern, not a lucky run.'],k:['~ -0.44','mean β for M1 and M3']},
+{r:'p',ch:{title:'Seeds significant for M1 (of 4)',sub:'Same test, different decoders',max:4,unit:'Seeds significant (of 4)',yl:'Decoder',rows:[B('CNN',4,M,'4 of 4'),B('Transformer\n30 epochs',0,RO,'0 of 4'),B('Transformer\nearly stopping',4,M,'4 of 4')]},t:'Train the decoder properly',l:['The 30-epoch Transformer found nothing, but its predictions had a far larger spread, a sign of poor training.','With early stopping the effect appeared in all 4 seeds (z-scored test).'],k:['0 → 4','seeds after proper training'],fl:{p:'Same effect, 2nd decoder'}},
+{r:'p',ch:{unit:'−log10 p (right of dashed = significant)',yl:'Comparison',title:'Are the models different? (-log10 p)',sub:'Paired test on per-person interaction beta',max:2,th:1.301,thl:'p = 0.05',rows:[B('CNN\nM1 vs M2',1.74,M,'p = 0.018'),B('CNN\nM1 vs M3',.24,V,'p = 0.57'),B('Transformer\nM1 vs M2',1.3,AM,'p = 0.050'),B('Transformer\nM1 vs M3',.89,V,'p = 0.13')]},t:'M1 and M3 cannot be separated',l:['M1 clearly differs from M2, but M1 and M3 do not differ, which fits their 0.970 RPE correlation.','The defensible claim is a <b>two-group</b> one: single-rate models against the dual-rate model.'],k:['2 groups','M1 + M3 versus M2']},
+{r:'p',ch:{unit:'−log10 p (right of dashed = significant)',yl:'Dataset',title:'Replication test (-log10 p)',sub:'Parieto-occipital interaction',max:3,th:1.301,thl:'p = 0.05',rows:[B('ds004295\nmain',2.6,M,'p = 0.0025'),B('ds003458\nreplication',.77,RO,'p = 0.17')]},t:'Does it replicate? Not yet',l:['Same negative sign on the second dataset, but not significant, and 0 of 23 jackknife runs reached p < 0.05.','The decoding designs differ, so this is <b>not a clean test</b>. A same-pipeline rerun is next.'],k:['0.17','p on ds003458']},
+{r:'fc',t:'Everything else was null',l:['Combining regions did not help (p = 0.22). Cross-valence transfer vanished after removing win/loss.','24 correlations between decodability and behaviour: none survived correction. Clustering of people was unstable.'],k:['0 of 24','survived FDR'],fl:{f:'No graded RPE',c:'No gain from combining'}},
+{r:'fcp',t:'The honest verdict',l:['<b>We claim:</b> a robust parieto-occipital interaction for M1 and M3 (not M2); decoders must be trained properly; in-sample and out-of-sample rankings disagree.','<b>We do not claim:</b> graded RPE decoding, that M1 and M3 differ in the brain, a confirmed replication, or which model the brain uses.'],k:['Small','but real, and unconfirmed']}];
 const dots=$('dots');S.forEach(()=>dots.appendChild(document.createElement('i')));
-let st=0,mode=0,mt=0,tp=0,sa=0,cur={y:0,z:10};
+let st=0,tp=0,T0=0,sa=0;
 // --- autoplay + optional per-step voiceover (audio/1.mp3, audio/2.mp3, ... next to this file) ---
 const vo=$('vo');let auto=false,apT=null;
 function clearAP(){clearTimeout(apT);apT=null}
@@ -136,31 +161,28 @@ vo.addEventListener('ended',()=>{if(auto)go(st+1)});
 vo.addEventListener('error',()=>{if(auto)scheduleFallback()});
 function playVO(n){vo.pause();vo.src=`audio/${n+1}.mp3`;vo.currentTime=0;vo.play().catch(()=>{if(auto)scheduleFallback()})}
 $('apM').onclick=e=>{e.stopPropagation();setAuto(false)};$('apA').onclick=e=>{e.stopPropagation();setAuto(true)};
-function go(n){if(n>=S.length)n=0;if(n<0)n=0;st=n;tp=0;const s=S[n];for(const k in A)A[k].t=s.v[k]||0;
-$('in').innerHTML=`<div class="s">Step ${n+1} of ${S.length}</div><h1>${s.t}${s.m?'<span id="chip"></span>':''}</h1>${s.l.map(x=>`<p>${x}</p>`).join('')}${s.k?`<div class="k"><strong>${s.k[0]}</strong><span>${s.k[1]}</span></div>`:''}<div id="nv"><button id="bk">‹ Back</button><button id="nx">Next ›</button><span>Space / click</span></div>`;
-[...dots.children].forEach((d,i)=>d.className=i<=n?'on':'');chip();playVO(n);if(auto)scheduleFallback()}
-function chip(){const c=$('chip');if(c){c.textContent=mode?'doing math':'resting';c.style.color=mode?RO:M}}
-addEventListener('click',e=>{if(e.target.closest('#ap'))return;if(e.target.id==='bk')go(st-1);else go(st+1)});
-addEventListener('keydown',e=>{if($('start'))return;if(e.code==='Space'||e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();go(st+1)}else if(e.key==='ArrowLeft'||e.key==='Backspace')go(st-1)});
-let T=0,wf=4,wa=.2,hr=1.2,last=performance.now();
-function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;mt+=dt;
-if(mt>3.6){mt=0;mode^=1;chip()}
-wf+=((mode?9:4)-wf)*.05;wa+=((mode?.07:.2)-wa)*.05;hr+=((mode?1.6:1.2)-hr)*.03;
-for(const k in A){const a=A[k];a.o+=(a.t-a.o)*.07;a.l.forEach(o=>{o.visible=a.o>.01;o.traverse(n=>{if(n.material)n.material.opacity=a.o*(n.material.userData.b??1)})})}
-brain.rotation.y=T*.25;heart.rotation.y=Math.sin(T*.5)*.6;els.forEach((m,i)=>m.scale.setScalar(1+.5*Math.sin(T*(mode?7:3)+i)));
-hpts.scale.setScalar(.06*(1+.1*Math.pow(Math.max(0,Math.sin(T*hr*6.283)),6)));
-const p=eg.geometry.attributes.position,q=cg.geometry.attributes.position;
-for(let i=0;i<140;i++){const u=i/139,x=-1.6+3.2*u,e=Math.sin(Math.PI*u);
-p.setXYZ(i,x,wa*e*(Math.sin(x*wf*2+T*(mode?9:4))+.4*Math.sin(x*wf*3.7-T*6)),0);
-const ph=(((x*.9-T*hr*.5)%1)+1)%1;q.setXYZ(i,x,e*(.55*Math.exp(-Math.pow((ph-.5)*22,2))-.12*Math.exp(-Math.pow((ph-.42)*30,2))+.1*Math.exp(-Math.pow((ph-.72)*14,2))),0)}
-p.needsUpdate=q.needsUpdate=true;
-const lp=lk.geometry.attributes.position;for(let i=0;i<160;i++){const pt=cvs[i%2].getPoint(((i>>1)/80+T*.25*(mode?1.5:1))%1);lp.setXYZ(i,pt.x,pt.y,pt.z)}lp.needsUpdate=true;
-c36.rotation.z=T*.15;c65.rotation.z=-T*.1;
-const s=S[st],a=Math.sin(T*.2)*.5;cur.y+=(s.cam[0]-cur.y)*.05;cur.z+=(s.cam[1]-cur.z)*.05;
-sa+=((dsk&&s.ch&&!s.ch.wide?1:0)-sa)*.06;cam.setViewOffset(sw,sh,sw*.24*sa,0,sw,sh);cam.updateProjectionMatrix();
-cam.position.set(Math.sin(a)*cur.z,cur.y,Math.cos(a)*cur.z);cam.lookAt(0,cur.y,0);R.render(sc,cam);
-gx.clearRect(0,0,sw,sh);tp=Math.min(1.7,tp+dt/2.6);
-if(s.ch){const r=dsk?(s.ch.wide?[.04,.12,.92,.7]:[.46,.07,.52,.84]):[.03,.05,.94,.9];draw(s.ch,sw*r[0],sh*r[1],sw*r[2],sh*r[3],tp,T)}}
+function go(n){if(n>=S.length)n=0;if(n<0)n=0;st=n;tp=0;pk=-1;ps=performance.now()/1000;const s=S[n];
+$('in').style.animation='none';void$('in').offsetWidth;$('in').style.animation='';$('in').innerHTML=`<div class="s">Step ${n+1} of ${S.length}</div><h1>${s.t}</h1>${s.l.map(x=>`<p>${x}</p>`).join('')}${s.k?`<div class="k"><strong>${s.k[0]}</strong><span>${s.k[1]}</span></div>`:''}<div id="nv"><button id="bk">‹ Back</button><button id="nx">Next ›</button><span>Space or click</span></div>`;
+[...dots.children].forEach((d,i)=>d.className=i<=n?'on':'');if(!s.pipe)setR(s.r);playVO(n);if(auto)scheduleFallback()}
+addEventListener('click',e=>{if(e.target.closest('#gr')||e.target.closest('#ap'))return;if(e.target.id==='bk')go(st-1);else go(st+1)});
+addEventListener('keydown',e=>{if($('start')||e.target.closest('#gr'))return;if(e.code==='Space'||e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();go(st+1)}else if(e.key==='ArrowLeft'||e.key==='Backspace')go(st-1)});
+let T=0,last=performance.now();const cc=new THREE.Color();
+function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;
+for(const k in I)I[k]+=(IT[k]-I[k])*.06;
+const pl=.75+.25*Math.sin(T*3.2);
+for(let i=0;i<N;i++){const w=wt[i],it=w[0]*I.f+w[1]*I.c+w[2]*I.p,b=(.22+.9*it)*(it>.5?pl:1);cc.copy(BASE).lerp(rcs[i],cl(it,0,1)).multiplyScalar(b);col[i*3]=cc.r;col[i*3+1]=cc.g;col[i*3+2]=cc.b}
+g.attributes.color.needsUpdate=true;
+brain.rotation.y=Math.sin(T*.3)*.5;brain.rotation.x=.1;stars.rotation.y=T*.02;rings.forEach((m,i)=>{m.rotation.z=T*(.15+i*.1);m.material.opacity=.2+.15*Math.sin(T*2+i)});
+const s=S[st];sa+=((dsk&&s.ch?1:0)-sa)*.06;
+cam.setViewOffset(sw,sh,sw*.24*sa,0,sw,sh);cam.position.set(0,.4,dsk?5.2:6.4);cam.lookAt(0,0,0);R.render(sc,cam);
+gx.clearRect(0,0,sw,sh);{const r=dsk?[.42,.07,.56,.84]:[.03,.04,.94,.92];BW=Math.min(sw*r[2]*ZS,sw-8);BH=Math.min(sh*r[3]*ZS,sh-8);BX=Math.max(4,sw*(r[0]+r[2])-BW);BY=Math.max(4,sh*r[1]+(sh*r[3]-BH)/2)}floaters(s,T);tp=Math.min(1.7,tp+dt/2.2);
+if(s.pipe){const r=dsk?[.05,.2,.9,.66]:[.04,.16,.92,.72];pipe(sw*r[0],sh*r[1],sw*r[2],sh*r[3],performance.now()/1000)}
+else if(s.ch){bars(s.ch,BX,BY,BW,BH,tp)}}
+const gr=$('gr');let dg=0,x0=0,mv=0;
+function setPW(v){PW=v;$('ui').style.display=v?'':'none';rs()}
+gr.onpointerdown=e=>{dg=1;mv=0;x0=e.clientX;gr.setPointerCapture(e.pointerId)};
+gr.onpointermove=e=>{if(!dg)return;if(Math.abs(e.clientX-x0)>4)mv=1;if(mv){let v=Math.min(innerWidth-e.clientX,innerWidth*.7);v=v<140?0:Math.max(v,260);setPW(v);if(v)LW=v}};
+gr.onpointerup=()=>{dg=0;if(!mv){if(pw()>0){LW=pw();setPW(0)}else setPW(LW||Math.max(380,innerWidth*.32))}};
 function begin(a){$('start').remove();setAuto(a);go(0)}$('start').onclick=e=>e.stopPropagation();
 $('sM').onclick=e=>{e.stopPropagation();begin(false)};$('sA').onclick=e=>{e.stopPropagation();begin(true)};
 go(0);requestAnimationFrame(frame);

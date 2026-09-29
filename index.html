@@ -30,13 +30,13 @@ h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background
 #ui{justify-content:flex-start}#in{margin:auto 0}#nv{position:sticky;bottom:0;background:#0d0b18;padding:12px 0 calc(12px + env(safe-area-inset-bottom,0px));z-index:2}
 @media (min-width:900px){#ui{padding:56px 30px 0}h1{font-size:clamp(24px,min(2.5vw,4.6vh),36px);margin-bottom:10px}p{font-size:clamp(15px,min(1.2vw,2.3vh),19px);line-height:1.5;margin:7px 0}.k{margin-top:12px}.k strong{font-size:clamp(34px,6vh,48px)}#nv{margin-top:14px}}
 #dots i{width:24px;height:4px}
-#ctl{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:calc(max(380px,32vw) + 14px);z-index:5;font:700 13px Mukta,system-ui;color:#f1eefb}
-#ctl button{border:1px solid #ffffff33;background:#0d0b18dd;color:#f1eefb;border-radius:99px;padding:6px 14px;font:inherit;cursor:pointer}
-#gp{position:absolute;right:0;top:38px;padding:12px 14px;background:#0d0b18f2;border:1px solid #ffffff22;border-radius:14px;display:grid;gap:9px;width:210px}#gp[hidden]{display:none}#gp label{display:grid;gap:2px;font-size:12px;color:#b3accb}#gp input{width:100%;accent-color:#5eead4}
-@media (max-width:899px){#ctl{right:12px}}
 #gr{position:fixed;top:0;bottom:0;right:max(0px,calc(var(--pw,32vw) - 10px));width:20px;cursor:col-resize;z-index:6;display:flex;align-items:center;justify-content:center;touch-action:none}
 #gr i{width:6px;height:72px;border-radius:4px;background:#5eead4aa;box-shadow:0 0 14px #5eead466;transition:.2s}#gr:hover i{background:#5eead4;height:110px}
 @media (max-width:899px){#gr{display:none}}
+
+/* ---------- pause / play button ---------- */
+#pp{display:none;border:1px solid #ffffff33;background:#0d0b18dd;color:#f1eefb;border-radius:99px;padding:5px 14px;font:700 12px Mukta,system-ui;cursor:pointer}
+#pp.show{display:block}
 
 /* ---------- START SCREEN ---------- */
 #ap{display:none!important}
@@ -51,8 +51,8 @@ h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background
 #start button span{font-size:14px;color:#b3accb;line-height:1.4}
 </style></head><body>
 <canvas id="cv"></canvas><canvas id="gc"></canvas>
-<div id="topwrap"><div id="dots"></div><div id="ap"><button id="apM" class="on">Manual</button><button id="apA">Auto</button></div></div>
-<audio id="vo" preload="none"></audio>
+<div id="topwrap"><div id="dots"></div><div id="ap"><button id="apM" class="on">Manual</button><button id="apA">Auto</button></div><button id="pp">⏸ Pause</button></div>
+<audio id="vo" preload="auto" src="narration.mp3"></audio>
 <div id="leg"><span id="l-f" style="--c:#5eead4">Frontal</span><span id="l-c" style="--c:#fbbf24">Central</span><span id="l-p" style="--c:#fb7185">Parieto-occipital</span></div>
 <div id="gr" title="Drag to resize · click to open/close"><i></i></div>
 <div id="ui"><div id="in"></div></div>
@@ -61,8 +61,8 @@ h1{background:linear-gradient(90deg,#fff,#5eead4 70%,#a78bfa);-webkit-background
   <h2>Brain × Reinforcement Learning</h2>
   <p>Animation कसं चालवायचं ते निवडा</p>
   <div class="opts">
-    <button id="stM"><b>Manual</b><span>Next / Back बटणाने किंवा Space दाबून, तुमच्या गतीने पुढे जा.</span></button>
-    <button id="stA"><b>Auto</b><span>आपोआप पुढे सरकेल, आवाज (voiceover) सोबत.</span></button>
+    <button id="stM"><b>Manual</b><span>Next / Back बटणाने किंवा Space दाबून, तुमच्या गतीने पुढे जा. प्रत्येक step चा आवाज त्या step पुरता वाजतो.</span></button>
+    <button id="stA"><b>Auto</b><span>पूर्ण 5:46 मिनिटांचा voiceover सुरू होतो आणि animation आवाजासोबत आपोआप पुढे सरकतो.</span></button>
   </div>
 </div></div>
 
@@ -167,22 +167,51 @@ const S=[
 {r:'fcp',t:'The honest verdict',l:['<b>We claim:</b> a robust parieto-occipital interaction for M1 and M3 (not M2); decoders must be trained properly; in-sample and out-of-sample rankings disagree.','<b>We do not claim:</b> graded RPE decoding, that M1 and M3 differ in the brain, a confirmed replication, or which model the brain uses.'],k:['Small','but real, and unconfirmed']}];
 const dots=$('dots');S.forEach(()=>dots.appendChild(document.createElement('i')));
 let st=0,tp=0,T0=0,sa=0;
-// --- autoplay + optional per-step voiceover (audio/1.mp3, audio/2.mp3, ... next to this file) ---
-const vo=$('vo');let auto=false,apT=null,started=false;
-function clearAP(){clearTimeout(apT);apT=null}
-function scheduleFallback(){clearAP();const s=S[st],words=(s.l||[]).join(' ').split(/\s+/).length;const dur=Math.max(5500,Math.min(11000,2200+words*90));apT=setTimeout(()=>{if(auto)go(st+1)},dur)}
-function setAuto(v){auto=v;$('apM').classList.toggle('on',!v);$('apA').classList.toggle('on',v);clearAP();if(v&&started)scheduleFallback()}
-vo.addEventListener('playing',clearAP);
-vo.addEventListener('ended',()=>{if(auto)go(st+1)});
-vo.addEventListener('error',()=>{if(auto)scheduleFallback()});
-function playVO(n){if(!started)return;vo.pause();vo.src=`audio/${n+1}.mp3`;vo.currentTime=0;vo.play().catch(()=>{if(auto)scheduleFallback()})}
-$('apM').onclick=e=>{e.stopPropagation();setAuto(false)};
-$('apA').onclick=e=>{e.stopPropagation();setAuto(true)};
-function go(n){if(n>=S.length)n=0;if(n<0)n=0;st=n;tp=0;pk=-1;ps=performance.now()/1000;const s=S[n];
+
+/* =====================================================================
+   VOICEOVER: एकच फाईल (narration.mp3, 5:46) — प्रत्येक step कोणत्या सेकंदाला सुरू होतो
+   जर एखादा step आवाजाशी थोडा मागे/पुढे वाटला तर फक्त इथले आकडे (सेकंद) बदला.
+   ===================================================================== */
+const TS=[0,23.58,41.66,66.6,88.42,107.26,134.24,156.13,177.65,192.39,222.48,236.4,251.6,265.82,283.55,305.01,318.94];
+const LEAD=0.25;                 // step आवाजाच्या थोडा आधी बदलतो
+const vo=$('vo'),pp=$('pp');
+let auto=false,started=false,lockUntil=0,fbT=null,audioBad=false;
+
+function stepAt(t){let i=0;for(let k=0;k<TS.length;k++)if(t>=TS[k]-LEAD)i=k;return i}
+function clearFB(){clearTimeout(fbT);fbT=null}
+/* आवाज चालला नाही तर (फाईल सापडली नाही वगैरे) timer वर auto चालेल */
+function scheduleFallback(){clearFB();if(!auto||!started)return;const s=S[st],words=(s.l||[]).join(' ').split(/\s+/).length;const dur=Math.max(5500,Math.min(11000,2200+words*90));fbT=setTimeout(()=>{if(auto&&audioBad&&st<S.length-1)go(st+1)},dur)}
+vo.addEventListener('error',()=>{audioBad=true;if(auto)scheduleFallback()});
+
+function updPP(){pp.classList.toggle('show',started&&auto);pp.textContent=vo.paused?'▶ Play':'⏸ Pause'}
+vo.addEventListener('play',updPP);vo.addEventListener('pause',updPP);
+vo.addEventListener('ended',()=>{updPP()});
+pp.onclick=e=>{e.stopPropagation();if(vo.paused){vo.play().catch(()=>{})}else vo.pause()};
+
+function setAuto(v){auto=v;clearFB();updPP();if(v&&started&&audioBad)scheduleFallback()}
+
+/* आवाजाच्या वेळेप्रमाणे step सतत sync होतो */
+setInterval(()=>{
+ if(!started||audioBad||performance.now()<lockUntil||vo.paused)return;
+ const t=vo.currentTime;
+ if(auto){const i=stepAt(t);if(i!==st)go(i,true)}
+ else{const end=st<TS.length-1?TS[st+1]-LEAD:1e9;if(t>=end)vo.pause()}
+},100);
+
+function playFrom(n){
+ if(audioBad)return;
+ lockUntil=performance.now()+600;
+ try{vo.currentTime=TS[n]}catch(e){}
+ vo.play().catch(()=>{audioBad=true;if(auto)scheduleFallback()})
+}
+
+function go(n,fromAudio){if(n>=S.length)n=0;if(n<0)n=0;st=n;tp=0;pk=-1;ps=performance.now()/1000;const s=S[n];
  $('in').style.animation='none';void $('in').offsetWidth;$('in').style.animation='';
  $('in').innerHTML=`<div class="s">Step ${n+1} of ${S.length}</div><h1>${s.t}</h1>${s.l.map(x=>`<p>${x}</p>`).join('')}${s.k?`<div class="k"><strong>${s.k[0]}</strong><span>${s.k[1]}</span></div>`:''}<div id="nv"><button id="bk">‹ Back</button><button id="nx">Next ›</button><span>Space or click</span></div>`;
- [...dots.children].forEach((d,i)=>d.className=i<=n?'on':'');if(!s.pipe)setR(s.r);playVO(n);if(started&&auto)scheduleFallback()}
-addEventListener('click',e=>{if(!started)return;if(e.target.closest('#gr')||e.target.closest('#ap'))return;if(e.target.id==='bk')go(st-1);else go(st+1)});
+ [...dots.children].forEach((d,i)=>d.className=i<=n?'on':'');if(!s.pipe)setR(s.r);
+ if(started&&!fromAudio){clearFB();playFrom(n);if(auto&&audioBad)scheduleFallback()}}
+
+addEventListener('click',e=>{if(!started)return;if(e.target.closest('#gr')||e.target.closest('#ap')||e.target.closest('#pp'))return;if(e.target.id==='bk')go(st-1);else go(st+1)});
 addEventListener('keydown',e=>{if(!started)return;if(e.target.closest('#gr'))return;if(e.code==='Space'||e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();go(st+1)}else if(e.key==='ArrowLeft'||e.key==='Backspace')go(st-1)});
 let T=0,last=performance.now();const cc=new THREE.Color();
 function frame(now){requestAnimationFrame(frame);const dt=Math.min((now-last)/1000,.05);last=now;T+=dt;
@@ -202,7 +231,7 @@ gr.onpointerdown=e=>{dg=1;mv=0;x0=e.clientX;gr.setPointerCapture(e.pointerId)};
 gr.onpointermove=e=>{if(!dg)return;if(Math.abs(e.clientX-x0)>4)mv=1;if(mv){let v=Math.min(innerWidth-e.clientX,innerWidth*.7);v=v<140?0:Math.max(v,260);setPW(v);if(v)LW=v}};
 gr.onpointerup=()=>{dg=0;if(!mv){if(pw()>0){LW=pw();setPW(0)}else setPW(LW||Math.max(380,innerWidth*.32))}};
 
-/* पान उघडल्यावर Step 1 फक्त दिसतो (आवाज/auto बंद), निवड केल्यावरच सुरू होतं */
+/* पान उघडल्यावर Step 1 फक्त दिसतो (आवाज बंद), निवड केल्यावरच सुरू होतं */
 go(0);requestAnimationFrame(frame);
 
 /* ---------- START SCREEN LOGIC ---------- */
@@ -214,7 +243,8 @@ go(0);requestAnimationFrame(frame);
     setTimeout(()=>ov.remove(),400);
     started=true;
     setAuto(isAuto);
-    go(0);
+    go(0);            // Step 1 + आवाज 0:00 पासून
+    updPP();
   }
   $('stM').onclick=()=>begin(false);
   $('stA').onclick=()=>begin(true);
